@@ -1,6 +1,6 @@
 ﻿using BackendStore.Data;
 using BackendStore.Dto.Request;
-using BackendStore.Dto.Respone;
+using BackendStore.Dto.Response;
 using BackendStore.Interface;
 using BackendStore.Model;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +11,7 @@ namespace BackendStore.Repository
     {
         private AppDbContext _context;
 
-        public UserRepository (AppDbContext context)
+        public UserRepository(AppDbContext context)
         {
             _context = context;
         }
@@ -25,7 +25,8 @@ namespace BackendStore.Repository
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
-            if (user == null) {
+            if (user == null)
+            {
                 throw new InvalidOperationException("User not found");
             }
 
@@ -34,22 +35,28 @@ namespace BackendStore.Repository
 
         public async Task<UserResponseDto> Login(LoginRequestDto loginRequestDto)
         {
-            var exisingUser = await GetUser(loginRequestDto.Username);
+            var existing = await GetUser(loginRequestDto.Username);
 
-            var passwordVerify = BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, exisingUser.Password);
-            if(!passwordVerify)
+            var passwordVerify = BCrypt.Net.BCrypt.Verify(
+                loginRequestDto.Password,
+                existing.Password
+            );
+            if (!passwordVerify)
             {
                 throw new InvalidOperationException("Invalid Username or Password");
             }
 
-            return UserResponseDto.ToUserResponseDto(exisingUser);
+            return UserResponseDto.ToUserResponseDto(existing);
         }
 
         public async Task<UserResponseDto> RegisterAsync(UserRequestDto userRequestDto)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userRequestDto.Username);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.Username == userRequestDto.Username
+            );
 
-            if (existingUser != null) {
+            if (existingUser != null)
+            {
                 throw new InvalidOperationException("Username already exist");
             }
 
@@ -59,7 +66,7 @@ namespace BackendStore.Repository
             {
                 Username = userRequestDto.Username,
                 FirstName = userRequestDto.FirstName,
-                LastName  = userRequestDto.LastName,
+                LastName = userRequestDto.LastName,
                 Password = hashedPassword,
             };
 

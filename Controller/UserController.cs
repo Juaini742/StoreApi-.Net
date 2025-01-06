@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using BackendStore.Dto.Request;
-using BackendStore.Dto.Respone;
+using BackendStore.Dto.Response;
 using BackendStore.Helpers;
 using BackendStore.Interface;
 using Microsoft.AspNetCore.Identity.Data;
@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BackendStore.Controller
 {
-
     [ApiController]
     [Route("api/user")]
     public class UserController : ControllerBase
@@ -25,11 +24,16 @@ namespace BackendStore.Controller
         {
             try
             {
-                UserResponseDto user =  await _userRepository.RegisterAsync(userRequestDto);
-                TemplateResponse<UserResponseDto> response = new TemplateResponse<UserResponseDto>("User Register Successfullt", HttpStatusCode.Created, user);
+                UserResponseDto user = await _userRepository.RegisterAsync(userRequestDto);
+                TemplateResponse<UserResponseDto> response = new TemplateResponse<UserResponseDto>(
+                    "User Register Successfully",
+                    HttpStatusCode.Created,
+                    user
+                );
                 return base.Ok(response);
             }
-            catch (InvalidOperationException ex) { 
+            catch (InvalidOperationException ex)
+            {
                 return BadRequest(new { message = ex.Message });
             }
         }
@@ -41,15 +45,22 @@ namespace BackendStore.Controller
             {
                 UserResponseDto user = await _userRepository.Login(loginRequestDto);
                 string userId = user.Id;
-                TemplateResponse<string> response = new TemplateResponse<string>("Login Successfullt", HttpStatusCode.Created, userId);
+                TemplateResponse<string> response = new TemplateResponse<string>(
+                    "Login Successfully",
+                    HttpStatusCode.Created,
+                    userId
+                );
                 return base.Ok(response);
             }
-            catch (InvalidOperationException ex) {
-                TemplateResponse<string> response = new TemplateResponse<string>("Internal Server Error", HttpStatusCode.InternalServerError, null);
-            return BadRequest(response);
+            catch (InvalidOperationException ex)
+            {
+                TemplateResponse<string> response = new TemplateResponse<string>(
+                    "Internal Server Error",
+                    HttpStatusCode.InternalServerError,
+                    null
+                );
+                return BadRequest(response);
             }
         }
-
-
     }
 }

@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "K2vc7pXBjeTHF/HYf0amFOQD0mcNGPZqjnbBLN0/EqI=",
+  "Hash": "j80r5zJNzo9zz2RjQXdJzbomSinuuU1ODkRck/W+baw=",
   "Source": "BackendStore",
   "BasePath": "_content/BackendStore",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }
